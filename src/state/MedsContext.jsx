@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useMemo, useReducer, useRef } fro
 import { supabase } from '../lib/supabase';
 import { useAuth } from './AuthContext';
 import { seedNewUser } from '../data/seedMeds';
-import { dateKey } from '../lib/dates';
 
 const MedsContext = createContext(null);
 
@@ -85,16 +84,6 @@ export function MedsProvider({ children }) {
         await seedNewUser(user.id);
         const { data: seeded } = await supabase.from('meds').select('*').order('sort_order');
         meds = (seeded ?? []).map(rowToMed);
-      }
-
-      // Auto-stop short-term meds whose end date has passed
-      const today = dateKey();
-      const expiredIds = meds
-        .filter((m) => m.active && m.endDate && today > m.endDate)
-        .map((m) => m.id);
-      if (expiredIds.length > 0) {
-        await supabase.from('meds').update({ active: false }).in('id', expiredIds);
-        meds = meds.map((m) => (expiredIds.includes(m.id) ? { ...m, active: false } : m));
       }
 
       const { data: logRows } = await supabase.from('dose_log').select('*');
