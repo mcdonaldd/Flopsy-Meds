@@ -12,9 +12,10 @@ create table if not exists meds (
   short_term   boolean     not null default false,
   end_date     text,
   color        text        not null default 'coral',
-  active       boolean     not null default true,
-  sort_order   integer     not null default 0,
-  created_at   timestamptz default now()
+  active          boolean     not null default true,
+  sort_order      integer     not null default 0,
+  scheduled_time  text,
+  created_at      timestamptz default now()
 );
 
 alter table meds enable row level security;

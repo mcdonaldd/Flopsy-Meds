@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useMeds } from '../state/MedsContext';
 import { COLOR_TAGS } from '../data/constants';
+import { formatTime } from '../lib/dates';
 
 export default function MedCard({ med, day }) {
   const { state, actions } = useMeds();
@@ -32,6 +33,9 @@ export default function MedCard({ med, day }) {
               {med.shortTerm && <span className="badge badge--accent">Short-term</span>}
             </div>
             <p className="body-md med-card__dose">
+              {med.scheduledTime && (
+                <span className="med-card__time">{formatTime(med.scheduledTime)} · </span>
+              )}
               <strong>{med.dose}</strong> · {med.timing}
             </p>
             {med.instructions && <p className="body-sm">{med.instructions}</p>}

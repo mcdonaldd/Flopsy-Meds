@@ -35,3 +35,21 @@ export function medActiveOn(med, key) {
   if (med.endDate && key > med.endDate) return false;
   return true;
 }
+
+// Format an HH:MM string as "8:00 AM". Returns null if no time given.
+export function formatTime(t) {
+  if (!t) return null;
+  const [h, m] = t.split(':').map(Number);
+  const period = h >= 12 ? 'PM' : 'AM';
+  const hour = h % 12 || 12;
+  return `${hour}:${m.toString().padStart(2, '0')} ${period}`;
+}
+
+// Sort comparator: by scheduledTime (HH:MM lexicographic), nulls last, then sortOrder.
+export function medTimeSort(a, b) {
+  if (!a.scheduledTime && !b.scheduledTime) return a.sortOrder - b.sortOrder;
+  if (!a.scheduledTime) return 1;
+  if (!b.scheduledTime) return -1;
+  if (a.scheduledTime !== b.scheduledTime) return a.scheduledTime.localeCompare(b.scheduledTime);
+  return a.sortOrder - b.sortOrder;
+}

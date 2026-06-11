@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useMeds } from '../state/MedsContext';
 import { COLOR_TAGS } from '../data/constants';
+import { formatTime, medTimeSort } from '../lib/dates';
 import MedForm from './MedForm';
 
 function ManageRow({ med, isFirst, isLast }) {
@@ -54,7 +55,10 @@ function ManageRow({ med, isFirst, isLast }) {
               {med.shortTerm && <span className="badge badge--accent">Short-term{med.endDate ? ` · ends ${med.endDate}` : ''}</span>}
               {!med.active && <span className="badge">Stopped</span>}
             </div>
-            <p className="body-md"><strong>{med.dose}</strong> · {med.timing}</p>
+            <p className="body-md">
+              {med.scheduledTime && <span className="med-card__time">{formatTime(med.scheduledTime)} · </span>}
+              <strong>{med.dose}</strong> · {med.timing}
+            </p>
             {med.instructions && <p className="body-sm">{med.instructions}</p>}
           </div>
           <div className="manage-row__actions">
@@ -86,7 +90,7 @@ function ManageRow({ med, isFirst, isLast }) {
 
 export default function Manage() {
   const { state } = useMeds();
-  const ordered = [...state.meds].sort((a, b) => a.sortOrder - b.sortOrder);
+  const ordered = [...state.meds].sort(medTimeSort);
   const active = ordered.filter((m) => m.active);
   const stopped = ordered.filter((m) => !m.active);
 

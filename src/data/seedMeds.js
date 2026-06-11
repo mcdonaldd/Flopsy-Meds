@@ -9,6 +9,7 @@ const SEED_MEDS = [
     short_term: false,
     end_date: null,
     color: 'coral',
+    scheduled_time: '08:00',
   },
   {
     name: 'Mirtazapine 3.75mg',
@@ -18,6 +19,7 @@ const SEED_MEDS = [
     short_term: false,
     end_date: null,
     color: 'butter',
+    scheduled_time: '08:00',
   },
   {
     name: 'Doxycycline 50mg',
@@ -27,6 +29,7 @@ const SEED_MEDS = [
     short_term: false,
     end_date: null,
     color: 'mint',
+    scheduled_time: '08:00',
   },
   {
     name: 'Clavamox 125mg',
@@ -36,15 +39,17 @@ const SEED_MEDS = [
     short_term: false,
     end_date: null,
     color: 'lilac',
+    scheduled_time: '08:00',
   },
   {
     name: 'Clopidogrel 9.375mg',
-    dose: '⅛ tablet',
+    dose: '⅘ tablet',
     timing: 'Once daily (morning)',
     instructions: 'Do not discontinue unless directed.',
     short_term: false,
     end_date: null,
     color: 'sky',
+    scheduled_time: '08:00',
   },
   {
     name: 'Neo Poly Bac Eye Ointment',
@@ -54,6 +59,7 @@ const SEED_MEDS = [
     short_term: false,
     end_date: null,
     color: 'sand',
+    scheduled_time: '08:00',
   },
   {
     name: 'Buprenorphine 0.075mg',
@@ -63,6 +69,7 @@ const SEED_MEDS = [
     short_term: true,
     end_date: '2026-06-09',
     color: 'peach',
+    scheduled_time: '08:00',
   },
   {
     name: 'Neo Poly Bac Eye Ointment',
@@ -72,6 +79,7 @@ const SEED_MEDS = [
     short_term: false,
     end_date: null,
     color: 'sand',
+    scheduled_time: '12:00',
   },
   {
     name: 'Neo Poly Bac Eye Ointment',
@@ -81,6 +89,7 @@ const SEED_MEDS = [
     short_term: false,
     end_date: null,
     color: 'sand',
+    scheduled_time: '15:00',
   },
   {
     name: 'Prednisone 2.5mg',
@@ -90,6 +99,7 @@ const SEED_MEDS = [
     short_term: false,
     end_date: null,
     color: 'coral',
+    scheduled_time: '20:00',
   },
   {
     name: 'Doxycycline 50mg',
@@ -99,6 +109,7 @@ const SEED_MEDS = [
     short_term: false,
     end_date: null,
     color: 'mint',
+    scheduled_time: '20:00',
   },
   {
     name: 'Clavamox 125mg',
@@ -108,6 +119,7 @@ const SEED_MEDS = [
     short_term: false,
     end_date: null,
     color: 'lilac',
+    scheduled_time: '20:00',
   },
   {
     name: 'Neo Poly Bac Eye Ointment',
@@ -117,6 +129,7 @@ const SEED_MEDS = [
     short_term: false,
     end_date: null,
     color: 'sand',
+    scheduled_time: '22:00',
   },
 ];
 

@@ -19,6 +19,7 @@ function rowToMed(row) {
     color: row.color,
     active: row.active,
     sortOrder: row.sort_order,
+    scheduledTime: row.scheduled_time ?? null,
   };
 }
 
@@ -129,6 +130,7 @@ export function MedsProvider({ children }) {
             color: med.color ?? 'coral',
             active: true,
             sort_order: maxOrder + 1,
+            scheduled_time: med.scheduledTime ?? null,
           })
           .select()
           .single();
@@ -149,6 +151,7 @@ export function MedsProvider({ children }) {
         if ('endDate' in changes) row.end_date = changes.endDate;
         if ('color' in changes) row.color = changes.color;
         if ('active' in changes) row.active = changes.active;
+        if ('scheduledTime' in changes) row.scheduled_time = changes.scheduledTime;
         supabase
           .from('meds')
           .update(row)

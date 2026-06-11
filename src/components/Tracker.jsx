@@ -1,16 +1,15 @@
 import { useState } from 'react';
 import { useMeds } from '../state/MedsContext';
-import { dateKey, addDays, formatDateKey, isToday, medActiveOn } from '../lib/dates';
+import { dateKey, addDays, formatDateKey, isToday, medActiveOn, medTimeSort } from '../lib/dates';
 import MedCard from './MedCard';
 
 export default function Tracker() {
   const { state } = useMeds();
   const [day, setDay] = useState(dateKey());
 
-  // Sorted by sortOrder = the sequence doses are given across the day.
   const dueMeds = state.meds
     .filter((m) => medActiveOn(m, day))
-    .sort((a, b) => a.sortOrder - b.sortOrder);
+    .sort(medTimeSort);
   const givenCount = dueMeds.filter((m) => state.doseLog[day]?.[m.id]?.given).length;
 
   if (!state.loaded) {

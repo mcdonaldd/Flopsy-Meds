@@ -5,6 +5,7 @@ const EMPTY = {
   name: '',
   dose: '',
   timing: '',
+  scheduledTime: '',
   instructions: '',
   shortTerm: false,
   endDate: '',
@@ -13,7 +14,7 @@ const EMPTY = {
 
 // Shared add/edit form. Pass `initial` to edit; onSave receives the med fields.
 export default function MedForm({ initial, onSave, onCancel, saveLabel = 'Save medication' }) {
-  const [form, setForm] = useState({ ...EMPTY, ...initial, endDate: initial?.endDate ?? '' });
+  const [form, setForm] = useState({ ...EMPTY, ...initial, endDate: initial?.endDate ?? '', scheduledTime: initial?.scheduledTime ?? '' });
 
   const set = (field) => (e) =>
     setForm({ ...form, [field]: e.target.type === 'checkbox' ? e.target.checked : e.target.value });
@@ -25,6 +26,7 @@ export default function MedForm({ initial, onSave, onCancel, saveLabel = 'Save m
       name: form.name.trim(),
       dose: form.dose.trim(),
       timing: form.timing.trim(),
+      scheduledTime: form.scheduledTime || null,
       instructions: form.instructions.trim(),
       shortTerm: form.shortTerm,
       endDate: form.shortTerm && form.endDate ? form.endDate : null,
@@ -44,10 +46,14 @@ export default function MedForm({ initial, onSave, onCancel, saveLabel = 'Save m
           <input className="input" value={form.dose} onChange={set('dose')} placeholder="e.g. 1 tablet" />
         </label>
         <label className="field">
-          <span className="field__label">Timing / frequency</span>
-          <input className="input" value={form.timing} onChange={set('timing')} placeholder="e.g. Morning, with food" />
+          <span className="field__label">Scheduled time</span>
+          <input className="input" type="time" value={form.scheduledTime} onChange={set('scheduledTime')} />
         </label>
       </div>
+      <label className="field">
+        <span className="field__label">Timing / frequency note</span>
+        <input className="input" value={form.timing} onChange={set('timing')} placeholder="e.g. Morning, with food" />
+      </label>
       <label className="field">
         <span className="field__label">Instructions</span>
         <textarea className="input" rows={2} value={form.instructions} onChange={set('instructions')} placeholder="e.g. Give with food. No dairy." />
