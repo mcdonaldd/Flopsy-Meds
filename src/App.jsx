@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import flopsySrc from './assets/flopsy.jpg';
 import { AuthProvider, useAuth } from './state/AuthContext';
 import { MedsProvider } from './state/MedsContext';
 import AuthScreen from './components/AuthScreen';
@@ -27,7 +28,7 @@ function Shell() {
       <div className="app-shell">
         <header className="container app-header">
           <div className="app-header__title">
-            <img src="/flopsy.jpg" alt="Flopsy" className="app-header__avatar" />
+            <img src={flopsySrc} alt="Flopsy" className="app-header__avatar" />
             <div>
               <p className="eyebrow eyebrow--accent">Recovery tracker</p>
               <h1 className="headline-lg">Flopsy's Meds</h1>

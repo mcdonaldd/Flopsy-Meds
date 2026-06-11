@@ -12,9 +12,15 @@ const EMPTY = {
   color: 'coral',
 };
 
-// Shared add/edit form. Pass `initial` to edit; onSave receives the med fields.
-export default function MedForm({ initial, onSave, onCancel, saveLabel = 'Save medication' }) {
-  const [form, setForm] = useState({ ...EMPTY, ...initial, endDate: initial?.endDate ?? '', scheduledTime: initial?.scheduledTime ?? '' });
+export default function MedForm({ initial, onSave, onCancel, saveLabel = 'Save medication', allowMultipleTimes = false }) {
+  const [form, setForm] = useState({
+    ...EMPTY,
+    ...initial,
+    endDate: initial?.endDate ?? '',
+    scheduledTime: initial?.scheduledTime ?? '',
+  });
+  // Extra time slots when allowMultipleTimes is on (beyond the first slot in form.scheduledTime)
+  const [extraTimes, setExtraTimes] = useState([]);
 
   const set = (field) => (e) =>
     setForm({ ...form, [field]: e.target.type === 'checkbox' ? e.target.checked : e.target.value });
@@ -22,16 +28,29 @@ export default function MedForm({ initial, onSave, onCancel, saveLabel = 'Save m
   function handleSubmit(e) {
     e.preventDefault();
     if (!form.name.trim()) return;
-    onSave({
+
+    const base = {
       name: form.name.trim(),
       dose: form.dose.trim(),
       timing: form.timing.trim(),
-      scheduledTime: form.scheduledTime || null,
       instructions: form.instructions.trim(),
       shortTerm: form.shortTerm,
       endDate: form.shortTerm && form.endDate ? form.endDate : null,
       color: form.color,
-    });
+    };
+
+    const allTimes = [form.scheduledTime || null, ...extraTimes.map((t) => t || null)].filter(Boolean);
+
+    if (allowMultipleTimes && allTimes.length > 1) {
+      // Return an array of med objects, one per time slot
+      onSave(allTimes.map((t, i) => ({
+        ...base,
+        scheduledTime: t,
+        timing: base.timing ? `${base.timing} (dose ${i + 1} of ${allTimes.length})` : `Dose ${i + 1} of ${allTimes.length}`,
+      })));
+    } else {
+      onSave({ ...base, scheduledTime: form.scheduledTime || null });
+    }
   }
 
   return (
@@ -45,10 +64,48 @@ export default function MedForm({ initial, onSave, onCancel, saveLabel = 'Save m
           <span className="field__label">Dose</span>
           <input className="input" value={form.dose} onChange={set('dose')} placeholder="e.g. 1 tablet" />
         </label>
-        <label className="field">
-          <span className="field__label">Scheduled time</span>
-          <input className="input" type="time" value={form.scheduledTime} onChange={set('scheduledTime')} />
-        </label>
+        <div className="field">
+          <span className="field__label">Scheduled time{allowMultipleTimes && extraTimes.length > 0 ? 's' : ''}</span>
+          <div className="stack-sm">
+            <input
+              className="input"
+              type="time"
+              value={form.scheduledTime}
+              onChange={set('scheduledTime')}
+            />
+            {allowMultipleTimes && extraTimes.map((t, i) => (
+              <div key={i} className="med-form__time-row">
+                <input
+                  className="input"
+                  type="time"
+                  value={t}
+                  onChange={(e) => {
+                    const updated = [...extraTimes];
+                    updated[i] = e.target.value;
+                    setExtraTimes(updated);
+                  }}
+                />
+                <button
+                  type="button"
+                  className="btn btn--ghost btn--sm"
+                  aria-label="Remove this time"
+                  onClick={() => setExtraTimes(extraTimes.filter((_, j) => j !== i))}
+                >
+                  <span className="btn__face">✕</span>
+                </button>
+              </div>
+            ))}
+            {allowMultipleTimes && extraTimes.length < 3 && (
+              <button
+                type="button"
+                className="link-btn body-sm"
+                onClick={() => setExtraTimes([...extraTimes, ''])}
+              >
+                + Add another time
+              </button>
+            )}
+          </div>
+        </div>
       </div>
       <label className="field">
         <span className="field__label">Timing / frequency note</span>

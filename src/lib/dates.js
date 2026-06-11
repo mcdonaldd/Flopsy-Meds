@@ -45,6 +45,17 @@ export function formatTime(t) {
   return `${hour}:${m.toString().padStart(2, '0')} ${period}`;
 }
 
+// Maps an HH:MM time to a human-readable period label used as a section header.
+export function timeToLabel(t) {
+  if (!t) return 'Unscheduled';
+  const [h] = t.split(':').map(Number);
+  if (h >= 5 && h < 12) return 'Morning';
+  if (h >= 12 && h < 14) return 'Midday';
+  if (h >= 14 && h < 17) return 'Afternoon';
+  if (h >= 17 && h < 21) return 'Evening';
+  return 'Bedtime';
+}
+
 // Sort comparator: by scheduledTime (HH:MM lexicographic), nulls last, then sortOrder.
 export function medTimeSort(a, b) {
   if (!a.scheduledTime && !b.scheduledTime) return a.sortOrder - b.sortOrder;

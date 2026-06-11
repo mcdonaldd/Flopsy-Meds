@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMeds } from '../state/MedsContext';
-import { dateKey, addDays, formatDateKey, isToday, medActiveOn, medTimeSort, formatTime } from '../lib/dates';
+import { dateKey, addDays, formatDateKey, isToday, medActiveOn, medTimeSort, timeToLabel } from '../lib/dates';
 import MedCard from './MedCard';
 
 function groupByTime(meds) {
@@ -67,7 +67,7 @@ export default function Tracker() {
             <div key={time ?? '__none__'} className="stack-sm">
               <div className="tracker-time-header">
                 <span className="tracker-time-header__label">
-                  {time ? formatTime(time) : 'Unscheduled'}
+                  {timeToLabel(time)}
                 </span>
               </div>
               <div className="stack-md">

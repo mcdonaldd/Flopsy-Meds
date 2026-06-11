@@ -25,9 +25,11 @@ export default function AddMeds() {
             <MedForm
               key={formKey}
               saveLabel="Add medication"
-              onSave={async (med) => {
-                await actions.addMed(med);
-                setSavedName(med.name);
+              allowMultipleTimes
+              onSave={async (medOrMeds) => {
+                const meds = Array.isArray(medOrMeds) ? medOrMeds : [medOrMeds];
+                for (const med of meds) await actions.addMed(med);
+                setSavedName(meds[0].name + (meds.length > 1 ? ` (${meds.length} doses)` : ''));
                 setFormKey((k) => k + 1);
               }}
             />

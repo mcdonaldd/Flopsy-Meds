@@ -231,6 +231,17 @@
   margin: 0;
 }
 
+/* Multiple time slots in MedForm */
+.med-form__time-row {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: center;
+}
+
+.med-form__time-row .input {
+  flex: 1;
+}
+
 /* Time-of-day section headers in Tracker */
 .tracker-time-header {
   display: flex;
