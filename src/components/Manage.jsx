@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useMeds } from '../state/MedsContext';
 import { COLOR_TAGS } from '../data/constants';
-import { formatTime, medTimeSort } from '../lib/dates';
+import { formatTime, medTimeSort, dateKey } from '../lib/dates';
 import MedForm from './MedForm';
 
-function ManageRow({ med, isFirst, isLast }) {
+function ManageRow({ med, isFirst, isLast, expired }) {
   const { actions } = useMeds();
   const [editing, setEditing] = useState(false);
 
@@ -52,7 +52,8 @@ function ManageRow({ med, isFirst, isLast }) {
             <div className="med-card__head">
               <span className="color-dot" style={{ background: COLOR_TAGS[med.color] ?? COLOR_TAGS.coral }} />
               <h3 className="title-md">{med.name}</h3>
-              {med.shortTerm && <span className="badge badge--accent">Short-term{med.endDate ? ` · ends ${med.endDate}` : ''}</span>}
+              {med.shortTerm && !expired && <span className="badge badge--accent">Short-term{med.endDate ? ` · ends ${med.endDate}` : ''}</span>}
+              {med.shortTerm && expired && <span className="badge">Expired {med.endDate}</span>}
               {!med.active && <span className="badge">Stopped</span>}
             </div>
             <p className="body-md">
@@ -90,6 +91,7 @@ function ManageRow({ med, isFirst, isLast }) {
 
 export default function Manage() {
   const { state } = useMeds();
+  const today = dateKey();
   const ordered = [...state.meds].sort(medTimeSort);
   const active = ordered.filter((m) => m.active);
   const stopped = ordered.filter((m) => !m.active);
@@ -101,12 +103,13 @@ export default function Manage() {
         <p className="body-sm">Listed in the order they're given across the day — use the arrows to reorder.</p>
       </div>
       <div className="stack-md">
-        {ordered.filter((m) => m.active).map((med) => (
+        {active.map((med, i) => (
           <ManageRow
             key={med.id}
             med={med}
-            isFirst={med.id === ordered[0]?.id}
-            isLast={med.id === ordered[ordered.length - 1]?.id}
+            isFirst={i === 0}
+            isLast={i === active.length - 1}
+            expired={Boolean(med.endDate && today > med.endDate)}
           />
         ))}
         {active.length === 0 && <p className="body-md">No active medications.</p>}
@@ -115,12 +118,12 @@ export default function Manage() {
         <>
           <h3 className="title-md">Stopped</h3>
           <div className="stack-md">
-            {stopped.map((med) => (
+            {stopped.map((med, i) => (
               <ManageRow
                 key={med.id}
                 med={med}
-                isFirst={med.id === ordered[0]?.id}
-                isLast={med.id === ordered[ordered.length - 1]?.id}
+                isFirst={i === 0}
+                isLast={i === stopped.length - 1}
               />
             ))}
           </div>
