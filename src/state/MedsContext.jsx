@@ -5,7 +5,7 @@ import { seedNewUser } from '../data/seedMeds';
 
 const MedsContext = createContext(null);
 
-const initialState = { meds: [], doseLog: {}, loaded: false };
+const initialState = { meds: [], doseLog: {}, extractions: [], loaded: false };
 
 function rowToMed(row) {
   return {
@@ -20,17 +20,29 @@ function rowToMed(row) {
     active: row.active,
     sortOrder: row.sort_order,
     scheduledTime: row.scheduled_time ?? null,
+    extractionId: row.extraction_id ?? null,
+  };
+}
+
+function rowToExtraction(row) {
+  return {
+    id: row.id,
+    filename: row.filename,
+    extractedAt: row.extracted_at,
+    output: row.output ?? [],
   };
 }
 
 function reducer(state, action) {
   switch (action.type) {
     case 'LOAD':
-      return { meds: action.meds, doseLog: action.doseLog, loaded: true };
+      return { meds: action.meds, doseLog: action.doseLog, extractions: action.extractions, loaded: true };
     case 'SET_MEDS':
       return { ...state, meds: action.meds };
     case 'ADD_MED':
       return { ...state, meds: [...state.meds, action.med] };
+    case 'ADD_EXTRACTION':
+      return { ...state, extractions: [...state.extractions, action.extraction] };
     case 'UPDATE_MED':
       return {
         ...state,
@@ -92,7 +104,14 @@ export function MedsProvider({ children }) {
         doseLog[row.day] ??= {};
         doseLog[row.day][row.med_id] = { given: row.given, givenAt: row.given_at, note: row.note };
       }
-      dispatch({ type: 'LOAD', meds, doseLog });
+
+      const { data: extRows } = await supabase
+        .from('extractions')
+        .select('*')
+        .order('extracted_at', { ascending: false });
+      const extractions = (extRows ?? []).map(rowToExtraction);
+
+      dispatch({ type: 'LOAD', meds, doseLog, extractions });
     }
     load().catch((err) => console.error('Failed to load state:', err));
   }, [user.id]);
@@ -115,7 +134,19 @@ export function MedsProvider({ children }) {
     }
 
     return {
-      async addMed(med) {
+      async addExtraction(filename, output) {
+        const { data, error } = await supabase
+          .from('extractions')
+          .insert({ user_id: userRef.current.id, filename, output })
+          .select()
+          .single();
+        if (error) throw new Error(error.message);
+        const extraction = rowToExtraction(data);
+        dispatch({ type: 'ADD_EXTRACTION', extraction });
+        return extraction;
+      },
+
+      async addMed(med, extractionId = null) {
         const maxOrder = stateRef.current.meds.reduce((m, x) => Math.max(m, x.sortOrder), 0);
         const { data, error } = await supabase
           .from('meds')
@@ -131,6 +162,7 @@ export function MedsProvider({ children }) {
             active: true,
             sort_order: maxOrder + 1,
             scheduled_time: med.scheduledTime ?? null,
+            extraction_id: extractionId,
           })
           .select()
           .single();
@@ -167,7 +199,6 @@ export function MedsProvider({ children }) {
 
       removeMed(id) {
         dispatch({ type: 'REMOVE_MED', id });
-        // dose_log rows cascade-delete via FK; just delete the med
         supabase
           .from('meds')
           .delete()

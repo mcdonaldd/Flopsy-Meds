@@ -1,5 +1,19 @@
 import { supabase } from '../lib/supabase';
 
+// What the AI would extract from the BluePearl discharge PDF — stored as the
+// canonical source so users can trace each seeded med back to the paperwork.
+const DISCHARGE_FILENAME = 'BluePearl Discharge Orders — June 6, 2026';
+const DISCHARGE_OUTPUT = [
+  { name: 'Prednisone 5mg', dose: '1 tablet (5mg)', timing: 'Morning', instructions: 'Give with food. Do not stop abruptly. Dose will change depending on rechecks.', shortTerm: false },
+  { name: 'Prednisone 5mg', dose: '½ tablet (2.5mg)', timing: 'Evening (8–9pm)', instructions: 'Give with food. Do not stop abruptly.', shortTerm: false },
+  { name: 'Clopidogrel (Plavix) 9.375mg', dose: '⅛ tablet', timing: 'Once daily (morning)', instructions: 'Do not discontinue unless directed.', shortTerm: false },
+  { name: 'Doxycycline 50mg', dose: '1 tablet (50mg)', timing: 'Morning and evening (~every 12 hours)', instructions: 'Give with food. No dairy. Finish all medication.', shortTerm: false },
+  { name: 'Clavamox 125mg', dose: '1 tablet (125mg)', timing: 'Twice daily', instructions: 'Give with food. Finish all tablets.', shortTerm: false },
+  { name: 'Buprenorphine 0.075mg', dose: '0.15ml into cheek pouch', timing: 'Every 8–12 hours (2–3× daily)', instructions: 'Pain relief. For 2–3 days post discharge (June 6, 2026). May cause sedation.', shortTerm: true },
+  { name: 'Neo Poly Bac Eye Ointment', dose: '¼ inch strip to left eye', timing: '3–4 times daily during waking hours', instructions: 'Apply to left eye only.', shortTerm: false },
+  { name: 'Mirtazapine 15mg', dose: '¼ tablet (3.75mg)', timing: 'Once daily in the morning', instructions: 'Appetite stimulant.', shortTerm: false },
+];
+
 const SEED_MEDS = [
   {
     name: 'Prednisone 5mg',
@@ -134,11 +148,26 @@ const SEED_MEDS = [
 ];
 
 export async function seedNewUser(userId) {
+  // Create an extraction record for the discharge paperwork so all seeded meds
+  // have a traceable source.
+  let extractionId = null;
+  const { data: extraction, error: extErr } = await supabase
+    .from('extractions')
+    .insert({ user_id: userId, filename: DISCHARGE_FILENAME, output: DISCHARGE_OUTPUT })
+    .select('id')
+    .single();
+  if (extErr) {
+    console.warn('Could not create discharge extraction record:', extErr.message);
+  } else {
+    extractionId = extraction.id;
+  }
+
   const rows = SEED_MEDS.map((med, i) => ({
     user_id: userId,
     ...med,
     active: true,
     sort_order: i + 1,
+    extraction_id: extractionId,
   }));
   const { error } = await supabase.from('meds').insert(rows);
   if (error) console.error('Seed failed:', error);

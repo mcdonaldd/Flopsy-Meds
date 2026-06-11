@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useMeds } from '../state/MedsContext';
 import Intake from './Intake';
 import MedForm from './MedForm';
+import ExtractionHistory from './ExtractionHistory';
 
 export default function AddMeds() {
   const { actions } = useMeds();
@@ -33,6 +34,8 @@ export default function AddMeds() {
           </div>
         </div>
       </div>
+      <hr className="divider" />
+      <ExtractionHistory />
     </section>
   );
 }

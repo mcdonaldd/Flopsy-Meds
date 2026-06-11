@@ -56,6 +56,8 @@ export default function Intake() {
   const [error, setError] = useState('');
   const [extracted, setExtracted] = useState([]);
   const [addedCount, setAddedCount] = useState(0);
+  const [currentExtractionId, setCurrentExtractionId] = useState(null);
+  const [rawOutput, setRawOutput] = useState([]);
 
   async function handleFile(e) {
     const file = e.target.files?.[0];
@@ -64,6 +66,8 @@ export default function Intake() {
     setStatus('loading');
     setError('');
     setAddedCount(0);
+    setCurrentExtractionId(null);
+    setRawOutput([]);
     try {
       const meds = await extractMedsFromDocument(file);
       if (meds.length === 0) {
@@ -71,6 +75,16 @@ export default function Intake() {
         setStatus('error');
         return;
       }
+      // Save the extraction record immediately so we have an ID to link meds to.
+      let extractionId = null;
+      try {
+        const extraction = await actions.addExtraction(file.name, meds);
+        extractionId = extraction.id;
+      } catch (err) {
+        console.warn('Could not save extraction record:', err.message);
+      }
+      setCurrentExtractionId(extractionId);
+      setRawOutput(meds);
       setExtracted(meds.map((m, i) => ({ ...m, _key: i })));
       setStatus('review');
     } catch (err) {
@@ -80,7 +94,7 @@ export default function Intake() {
   }
 
   async function confirm(key, med) {
-    await actions.addMed({ ...med, endDate: med.endDate ?? null, color: med.color ?? 'coral' });
+    await actions.addMed({ ...med, endDate: med.endDate ?? null, color: med.color ?? 'coral' }, currentExtractionId);
     setExtracted((list) => list.filter((m) => m._key !== key));
     setAddedCount((n) => n + 1);
   }
@@ -122,7 +136,7 @@ export default function Intake() {
 
       {status === 'review' && extracted.length > 0 && (
         <div className="stack-md">
-          <h3 className="title-md">Found {extracted.length} medication{extracted.length === 1 ? '' : 's'} — review each one</h3>
+          <h3 className="title-md">Found {rawOutput.length} medication{rawOutput.length === 1 ? '' : 's'} — review each one</h3>
           {extracted.map((med) => (
             <ReviewCard
               key={med._key}
