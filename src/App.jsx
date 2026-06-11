@@ -26,9 +26,12 @@ function Shell() {
     <MedsProvider>
       <div className="app-shell">
         <header className="container app-header">
-          <div>
-            <p className="eyebrow eyebrow--accent">Recovery tracker</p>
-            <h1 className="headline-lg">Flopsy's Meds 🐕</h1>
+          <div className="app-header__title">
+            <img src="/flopsy.jpg" alt="Flopsy" className="app-header__avatar" />
+            <div>
+              <p className="eyebrow eyebrow--accent">Recovery tracker</p>
+              <h1 className="headline-lg">Flopsy's Meds</h1>
+            </div>
           </div>
           <div className="app-header__right">
             <nav className="tabs" role="tablist" aria-label="Views">

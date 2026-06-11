@@ -134,10 +134,11 @@ const SEED_MEDS = [
 ];
 
 export async function seedNewUser(userId) {
+  const today = new Date().toISOString().slice(0, 10);
   const rows = SEED_MEDS.map((med, i) => ({
     user_id: userId,
     ...med,
-    active: true,
+    active: !(med.end_date && today > med.end_date),
     sort_order: i + 1,
   }));
   const { error } = await supabase.from('meds').insert(rows);
