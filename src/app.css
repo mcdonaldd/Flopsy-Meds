@@ -1,0 +1,278 @@
+/* App-specific layout on top of the Plinth design system (system.css). */
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-lg);
+}
+
+.app-main {
+  flex: 1;
+  padding-bottom: var(--space-2xl);
+  width: 100%;
+  max-width: 760px;
+}
+
+/* Day navigation */
+.day-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.day-nav__label {
+  text-align: center;
+}
+
+.tracker-progress {
+  text-align: center;
+}
+
+/* Med cards */
+.med-card--done .card__face {
+  background: var(--surface-tint);
+}
+
+.med-card__row {
+  display: flex;
+  gap: var(--space-md);
+  align-items: flex-start;
+}
+
+.med-card__check {
+  margin-top: 2px;
+}
+
+.med-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.med-card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.med-card--done .med-card__name {
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.med-card__given {
+  font-weight: 600;
+}
+
+.med-card__note {
+  margin-top: var(--space-2xs);
+  resize: vertical;
+}
+
+.color-dot {
+  width: 0.85em;
+  height: 0.85em;
+  border-radius: var(--radius-full);
+  border: var(--border-w-hair) solid var(--border-strong);
+  flex-shrink: 0;
+}
+
+/* Quiet inline text button */
+.link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-body);
+  color: var(--text-secondary);
+  text-decoration: underline;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.link-btn:hover {
+  color: var(--text-primary);
+}
+
+/* Manage rows */
+.manage-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.manage-row__info {
+  flex: 1;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.manage-row__actions {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.med-row--stopped .card__face {
+  opacity: 0.65;
+}
+
+/* Med form */
+.med-form__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+  align-items: end;
+}
+
+@media (max-width: 560px) {
+  .med-form__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.med-form__check {
+  padding-bottom: 0.6em;
+}
+
+.med-form__actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.color-picker {
+  display: flex;
+  gap: var(--space-xs);
+  margin-top: var(--space-2xs);
+}
+
+.color-swatch {
+  width: 2em;
+  height: 2em;
+  border-radius: var(--radius-full);
+  border: var(--border-w-hair) solid var(--border-strong);
+  cursor: pointer;
+}
+
+.color-swatch--selected {
+  border-width: var(--border-w);
+  box-shadow: 0 0 0 var(--focus-w) var(--focus-ring);
+}
+
+/* Upload button doubles as a file input label */
+.upload-btn {
+  align-self: flex-start;
+  display: inline-block;
+}
+
+.upload-btn--busy {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.error-text {
+  color: var(--color-error, #c0392b);
+}
+
+/* Auth screen */
+.auth-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+}
+
+.app-header__right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-xs);
+}
+
+.app-header__user {
+  margin: 0;
+}
+
+/* Reorder arrows in Manage */
+.manage-row__order {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.order-btn {
+  background: var(--surface-face);
+  border: var(--border-w-hair) solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  width: 2em;
+  height: 1.7em;
+  cursor: pointer;
+  font-size: 0.8em;
+  line-height: 1;
+}
+
+.order-btn:hover:not(:disabled) {
+  background: var(--surface-tint);
+}
+
+.order-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* Emergency footer */
+.emergency-footer {
+  border-top: var(--border-w) solid var(--border-strong);
+  background: var(--surface-face);
+  margin-top: auto;
+}
+
+.emergency-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xl);
+  padding-top: var(--space-lg);
+  padding-bottom: var(--space-lg);
+}
+
+.emergency-footer__list {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-xs) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.emergency-footer__signs {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.emergency-footer a {
+  color: var(--text-primary);
+  font-weight: 600;
+}
