@@ -12,7 +12,7 @@ const SEED_MEDS = [
     scheduled_time: '08:00',
   },
   {
-    name: 'Mirtazapine 3.75mg',
+    name: 'Mirtazapine 15mg',
     dose: '¼ tablet',
     timing: 'Morning',
     instructions: 'Appetite stimulant.',
@@ -43,7 +43,7 @@ const SEED_MEDS = [
   },
   {
     name: 'Clopidogrel 9.375mg',
-    dose: '⅘ tablet',
+    dose: '⅛ tablet',
     timing: 'Once daily (morning)',
     instructions: 'Do not discontinue unless directed.',
     short_term: false,
