@@ -138,7 +138,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-md);
-  align-items: end;
+  align-items: start;
 }
 
 @media (max-width: 560px) {
@@ -258,11 +258,11 @@
 }
 
 .tracker-time-header__label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   white-space: nowrap;
 }
 
