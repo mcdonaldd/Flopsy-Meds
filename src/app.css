@@ -231,6 +231,30 @@
   margin: 0;
 }
 
+/* Time-of-day section headers in Tracker */
+.tracker-time-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.tracker-time-header::before,
+.tracker-time-header::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-quiet);
+}
+
+.tracker-time-header__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
 /* Reorder arrows in Manage */
 .manage-row__order {
   display: flex;

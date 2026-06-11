@@ -1,7 +1,21 @@
 import { useState } from 'react';
 import { useMeds } from '../state/MedsContext';
-import { dateKey, addDays, formatDateKey, isToday, medActiveOn, medTimeSort } from '../lib/dates';
+import { dateKey, addDays, formatDateKey, isToday, medActiveOn, medTimeSort, formatTime } from '../lib/dates';
 import MedCard from './MedCard';
+
+function groupByTime(meds) {
+  const groups = [];
+  const map = new Map();
+  for (const med of meds) {
+    const key = med.scheduledTime ?? '__none__';
+    if (!map.has(key)) {
+      map.set(key, []);
+      groups.push({ time: med.scheduledTime ?? null, meds: map.get(key) });
+    }
+    map.get(key).push(med);
+  }
+  return groups;
+}
 
 export default function Tracker() {
   const { state } = useMeds();
@@ -48,9 +62,20 @@ export default function Tracker() {
           </div>
         </div>
       ) : (
-        <div className="stack-md">
-          {dueMeds.map((med) => (
-            <MedCard key={med.id} med={med} day={day} />
+        <div className="stack-lg">
+          {groupByTime(dueMeds).map(({ time, meds }) => (
+            <div key={time ?? '__none__'} className="stack-sm">
+              <div className="tracker-time-header">
+                <span className="tracker-time-header__label">
+                  {time ? formatTime(time) : 'Unscheduled'}
+                </span>
+              </div>
+              <div className="stack-md">
+                {meds.map((med) => (
+                  <MedCard key={med.id} med={med} day={day} />
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       )}
