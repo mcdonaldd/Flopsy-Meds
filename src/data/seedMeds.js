@@ -129,7 +129,7 @@ const SEED_MEDS = [
     short_term: false,
     end_date: null,
     color: 'sand',
-    scheduled_time: '22:00',
+    scheduled_time: '21:00',
   },
 ];
 
