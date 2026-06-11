@@ -1,8 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 
-// NOTE: claude-sonnet-4-20250514 (requested for this app) is deprecated and
-// retires June 15, 2026. Swap to 'claude-sonnet-4-6' when that happens.
-const MODEL = 'claude-sonnet-4-20250514';
+const MODEL = 'claude-sonnet-4-6';
 
 const EXTRACTION_PROMPT = `This is veterinary discharge paperwork for a dog. Extract every medication into a JSON array. Each element must have exactly these fields:
 - "name": medication name including strength (e.g. "Prednisone 5mg")

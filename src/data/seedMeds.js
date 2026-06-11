@@ -1,14 +1,13 @@
-// Seed medications for new accounts, in the order they're given across the day.
-// The eye ointment (3–4x/day) appears once per application time.
+import { supabase } from '../lib/supabase';
 
-export const seedMeds = [
+const SEED_MEDS = [
   {
     name: 'Prednisone 5mg',
     dose: '1 tablet',
     timing: 'Morning',
     instructions: 'Give with food. Do not stop abruptly.',
-    shortTerm: false,
-    endDate: null,
+    short_term: false,
+    end_date: null,
     color: 'coral',
   },
   {
@@ -16,8 +15,8 @@ export const seedMeds = [
     dose: '¼ tablet',
     timing: 'Morning',
     instructions: 'Appetite stimulant.',
-    shortTerm: false,
-    endDate: null,
+    short_term: false,
+    end_date: null,
     color: 'butter',
   },
   {
@@ -25,8 +24,8 @@ export const seedMeds = [
     dose: '1 tablet',
     timing: 'Morning',
     instructions: 'Give with food. No dairy. Finish all tablets.',
-    shortTerm: false,
-    endDate: null,
+    short_term: false,
+    end_date: null,
     color: 'mint',
   },
   {
@@ -34,8 +33,8 @@ export const seedMeds = [
     dose: '1 tablet',
     timing: 'Morning',
     instructions: 'Give with food. Finish all tablets.',
-    shortTerm: false,
-    endDate: null,
+    short_term: false,
+    end_date: null,
     color: 'lilac',
   },
   {
@@ -43,8 +42,8 @@ export const seedMeds = [
     dose: '⅛ tablet',
     timing: 'Once daily (morning)',
     instructions: 'Do not discontinue unless directed.',
-    shortTerm: false,
-    endDate: null,
+    short_term: false,
+    end_date: null,
     color: 'sky',
   },
   {
@@ -52,8 +51,8 @@ export const seedMeds = [
     dose: '¼ inch strip to left eye',
     timing: 'Morning (1st of 4 daily)',
     instructions: 'Apply to left eye only. 3–4 times per day during waking hours.',
-    shortTerm: false,
-    endDate: null,
+    short_term: false,
+    end_date: null,
     color: 'sand',
   },
   {
@@ -61,8 +60,8 @@ export const seedMeds = [
     dose: '0.15ml into cheek pouch',
     timing: 'Every 8–12 hours',
     instructions: 'Pain relief only. Short-term: 2–3 days post discharge (June 6, 2026).',
-    shortTerm: true,
-    endDate: '2026-06-09',
+    short_term: true,
+    end_date: '2026-06-09',
     color: 'peach',
   },
   {
@@ -70,8 +69,8 @@ export const seedMeds = [
     dose: '¼ inch strip to left eye',
     timing: 'Midday (2nd of 4 daily)',
     instructions: 'Apply to left eye only.',
-    shortTerm: false,
-    endDate: null,
+    short_term: false,
+    end_date: null,
     color: 'sand',
   },
   {
@@ -79,8 +78,8 @@ export const seedMeds = [
     dose: '¼ inch strip to left eye',
     timing: 'Afternoon (3rd of 4 daily)',
     instructions: 'Apply to left eye only.',
-    shortTerm: false,
-    endDate: null,
+    short_term: false,
+    end_date: null,
     color: 'sand',
   },
   {
@@ -88,8 +87,8 @@ export const seedMeds = [
     dose: '½ tablet',
     timing: 'Evening (8–9pm)',
     instructions: 'Give with food. Do not stop abruptly.',
-    shortTerm: false,
-    endDate: null,
+    short_term: false,
+    end_date: null,
     color: 'coral',
   },
   {
@@ -97,8 +96,8 @@ export const seedMeds = [
     dose: '1 tablet',
     timing: 'Evening (~12 hrs after morning dose)',
     instructions: 'Give with food. No dairy. Finish all tablets.',
-    shortTerm: false,
-    endDate: null,
+    short_term: false,
+    end_date: null,
     color: 'mint',
   },
   {
@@ -106,8 +105,8 @@ export const seedMeds = [
     dose: '1 tablet',
     timing: 'Evening (~12 hrs after morning dose)',
     instructions: 'Give with food. Finish all tablets.',
-    shortTerm: false,
-    endDate: null,
+    short_term: false,
+    end_date: null,
     color: 'lilac',
   },
   {
@@ -115,8 +114,19 @@ export const seedMeds = [
     dose: '¼ inch strip to left eye',
     timing: 'Bedtime (4th of 4 daily, if awake)',
     instructions: 'Apply to left eye only. Skip if already asleep — 3 applications is acceptable.',
-    shortTerm: false,
-    endDate: null,
+    short_term: false,
+    end_date: null,
     color: 'sand',
   },
 ];
+
+export async function seedNewUser(userId) {
+  const rows = SEED_MEDS.map((med, i) => ({
+    user_id: userId,
+    ...med,
+    active: true,
+    sort_order: i + 1,
+  }));
+  const { error } = await supabase.from('meds').insert(rows);
+  if (error) console.error('Seed failed:', error);
+}
